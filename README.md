@@ -1,4 +1,4 @@
-# Astronomers AI Assistanat
+# Astronomers AI Assistant
 Title: "Astronomers AI Assistant: Your Cosmic Guide"
 
 To participate in Lablab Gravity hackathon
