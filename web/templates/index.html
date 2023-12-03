@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astronomers AI Assistant</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2; /* Light gray background color */
+            color: #333; /* Text color */
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .section {
+            text-align: left;
+            margin-top: 20px;
+            background-color: #fff; /* White background color */
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%; /* Full width for small screens */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .section input, .section textarea {
+            width: 100%;
+            padding: 10px; /* Smaller padding */
+            margin: 0 auto; /* Center the input fields */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px; /* Smaller font size */
+        }
+    
+        .section button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007BFF; /* Space blue */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section button:hover {
+            background-color: #0056b3; /* Darker space blue on hover */
+        }
+
+        /* New styles for buttons */
+        .btn-primary {
+            background-color: #007BFF; /* Space blue */
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background-color: #555;
+            color: #fff;
+        }
+        
+        /* Media queries for responsiveness */
+        @media (min-width: 768px) {
+            /* For screens larger than 768px (iPads and computers) */
+            .container {
+                max-width: 800px; /* Limit container width for readability */
+            }
+
+            .section {
+                width: 80%; /* Adjust the width as needed */
+                margin: 0 auto; /* Center the section on larger screens */
+            }
+        }
+    </style>
+
+    
+</head>
+<body>
+    <h1>Welcome to the Astronomers AI Assistant</h1>
+    <h4>Done by Abdulrhman Alghamdi</h4>
+
+    <button onclick="showChat()">Chat with AI</button>
+    <button onclick="showEvents()">Search for Event</button>
+    <button onclick="showObject()">Search for Object</button>
+
+    <div id="chat" style="display: none;">
+        <h2>Chat with AI</h2>
+        <textarea id="question" name="question" rows="2" cols="50"></textarea>
+        <br>
+        <button onclick="askQuestion()">Send</button>
+        <h3>Reply</h3>
+        <div id="answer"></div>
+    </div>
+
+    <div id="events" style="display: none;">
+        <h2>Search for Astronomical Events</h2>
+        <label for="start_date">Start Date:</label>
+        <input type="text" id="start_date">
+        <br>
+        <label for="end_date">End Date:</label>
+        <input type="text" id="end_date">
+        <br>
+        <button onclick="searchEvents()">Search</button>
+        <h3>Event Info</h3>
+        <div id="events_info"></div>
+    </div>
+
+    <div id="object" style="display: none;">
+        <h2>Search for Object</h2>
+        <textarea id="object_name" name="object_name" rows="2" cols="50"></textarea>
+        <br>
+        <button onclick="searchObject()">Search</button>
+        <h3>Object Info</h3>
+        <div id="object_info"></div>
+    </div>
+
+    <script>
+        function showChat() {
+            document.getElementById("chat").style.display = "block";
+            document.getElementById("events").style.display = "none";
+            document.getElementById("object").style.display = "none";
+        }
+
+        function showEvents() {
+            document.getElementById("chat").style.display = "none";
+            document.getElementById("events").style.display = "block";
+            document.getElementById("object").style.display = "none";
+        }
+
+        function showObject() {
+            document.getElementById("chat").style.display = "none";
+            document.getElementById("events").style.display = "none";
+            document.getElementById("object").style.display = "block";
+        }
+
+        function askQuestion() {
+            const question = document.getElementById("question").value;
+            fetch("/chat", {
+                method: "POST",
+                body: JSON.stringify({ question: question }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                document.getElementById("answer").innerText = data.answer;
+            });
+        }
+
+        function searchEvents() {
+            const start_date = document.getElementById("start_date").value;
+            const end_date = document.getElementById("end_date").value;
+            fetch("/events", {
+                method: "POST",
+                body: JSON.stringify({ start_date: start_date, end_date: end_date }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                document.getElementById("events_info").innerText = data.events;
+            });
+        }
+
+        function searchObject() {
+            const object_name = document.getElementById("object_name").value;
+            fetch("/object", {
+                method: "POST",
+                body: JSON.stringify({ object_name: object_name }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                document.getElementById("object_info").innerText = data.info;
+            });
+        }
+    </script>
+</body>
+</html>
